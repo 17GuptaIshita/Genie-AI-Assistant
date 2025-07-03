@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Genie - Your Personal AI Assistant',
-  description: 'Your personal AI assistant',
+  description: 'The AI assistant that helps you with everything',
 }
 
 export default function RootLayout({
