@@ -10,6 +10,7 @@ export default function Page() {
   });
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
 
   const scrollToBottom = () => {
@@ -19,6 +20,24 @@ export default function Page() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Keep input focused after sending messages
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [messages, isLoading]);
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleSubmit(e);
+    // Refocus the input after a brief delay to ensure the form submission completes
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 10);
+  };
 
   const handleCopy = async (messageId: string, content: string) => {
     try {
@@ -140,13 +159,15 @@ export default function Page() {
       </div>
 
       {/* Input Form */}
-      <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 10 }}>
+      <form onSubmit={handleFormSubmit} style={{ display: 'flex', gap: 10 }}>
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={handleInputChange}
           placeholder="Type your message..."
           disabled={isLoading}
+          autoFocus
           style={{
             flex: 1,
             padding: '12px 16px',
