@@ -2,7 +2,7 @@
 
 import { useChat } from 'ai/react';
 import { useEffect, useRef, useState } from 'react';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Send } from 'lucide-react';
 
 export default function Page() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
@@ -12,6 +12,18 @@ export default function Page() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth <= 480);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -159,7 +171,12 @@ export default function Page() {
       </div>
 
       {/* Input Form */}
-      <form onSubmit={handleFormSubmit} style={{ display: 'flex', gap: 10 }}>
+      <form onSubmit={handleFormSubmit} style={{ 
+        display: 'flex', 
+        gap: 8,
+        width: '100%',
+        boxSizing: 'border-box'
+      }}>
         <input
           ref={inputRef}
           type="text"
@@ -170,19 +187,21 @@ export default function Page() {
           autoFocus
           style={{
             flex: 1,
+            minWidth: 0,
             padding: '12px 16px',
             fontSize: 16,
             borderRadius: 25,
             border: '1px solid #ddd',
             outline: 'none',
             backgroundColor: isLoading ? '#f8f9fa' : 'white',
+            boxSizing: 'border-box'
           }}
         />
         <button
           type="submit"
           disabled={isLoading || !input.trim()}
           style={{
-            padding: '12px 24px',
+            padding: isSmallScreen ? '12px 16px' : '12px 20px',
             borderRadius: 25,
             border: 'none',
             backgroundColor: isLoading || !input.trim() ? '#ccc' : '#007bff',
@@ -190,10 +209,18 @@ export default function Page() {
             fontSize: 16,
             fontWeight: 'bold',
             cursor: isLoading || !input.trim() ? 'not-allowed' : 'pointer',
-            minWidth: '80px',
+            minWidth: isSmallScreen ? '50px' : '70px',
+            maxWidth: isSmallScreen ? '50px' : '80px',
+            flexShrink: 0,
+            whiteSpace: 'nowrap',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
         >
-          {isLoading ? '...' : 'Send'}
+          {isLoading ? '...' : (
+            isSmallScreen ? <Send size={18} /> : 'Send'
+          )}
         </button>
       </form>
       
