@@ -28,6 +28,29 @@ A minimal and responsive AI Assistant built using the **OpenAI API** and **Verce
 4. Response is streamed back in real time
 
 
+## ⚙️ How to Use This Project Locally
+
+Follow these steps to get started:
+
+### 1. Clone the Repository
+
+<pre>git clone https://github.com/your-username/genieai.git
+cd genieai</pre>
+
+### 2. Install Dependencies
+
+<pre>npm install</pre>
+
+### 3. Set Up Environment Variables
+Create a .env.local file in the root of your project and add the following:
+
+<pre>OPENAI_API_KEY=your-openai-api-key-here</pre>
+
+<p>🔐 Important: Never expose your API key in client-side code or public repositories.</p>
+
+### 4. Start the Development Server
+
+<pre>npm run dev</pre>
 
 ## 📡 Live Demo
 
